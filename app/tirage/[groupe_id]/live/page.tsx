@@ -82,7 +82,7 @@ export default function TirageLivePage({
         setCount(null);
         setSpinning(true);
         setTimeout(() => {
-          const res = launchTirage(groupe.id!);
+          const res = launchTirage(groupe!.id!);
           setSpinning(false);
           if (!res.ok) setError(res.raison ?? "Échec");
         }, 3400);
