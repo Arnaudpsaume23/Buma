@@ -93,8 +93,8 @@ export default function TirageLivePage({
   function payout(mode: "standard" | "express") {
     if (!todayTirage) return;
     setPayout(todayTirage.id, mode);
-    const msg = winner
-      ? `🎉 BUMA ${groupe?.nom}\nGAGNANTE JOUR ${groupe?.jour_actuel} : ${winner.nom} — ${winner.telephone}\n${fcfa(groupe?.montant_marmite)}\nMode : ${mode === "express" ? "EXPRESS 5 min" : "Demain 10h gratuit"}\nVidéo : ${todayTirage.video_url}\nPreuve seed : ${todayTirage.seed_hasard}`
+        const msg = winner
+      ? `🎉 BUMA ${groupe?.nom}\nGAGNANTE JOUR ${groupe?.jour_actuel} : ${winner.nom} — ${winner.telephone}\n${fcfa(groupe?.montant_marmite ?? 0)}\nMode : ${mode === "express" ? "EXPRESS 5 min" : "Demain 10h gratuit"}\nVidéo : ${todayTirage.video_url}\nPreuve seed : ${todayTirage.seed_hasard}`
       : "";
     setWa(msg);
     const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
