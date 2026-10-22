@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gabon-green: #009e60;
+  --gabon-yellow: #fcd116;
+  --gabon-blue: #3a75c4;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% -10%, #fff3b0 0, transparent 40%),
+    radial-gradient(circle at 110% 10%, #9be7c4 0, transparent 36%),
+    radial-gradient(circle at 50% 120%, #9ec5ff 0, transparent 40%),
+    #fff7e6;
+  color: #102318;
+}
+
+.market-grid {
+  background-image:
+    linear-gradient(90deg, rgba(0, 158, 96, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(252, 209, 22, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.giant-btn {
+  @apply w-full rounded-2xl px-5 py-5 text-center text-lg font-black uppercase tracking-wide text-white shadow-giant active:translate-y-1 active:shadow-none;
+}
+
+.num-xl {
+  font-family: var(--font-display), Impact, sans-serif;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+@keyframes spin-wheel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(2160deg);
+  }
+}
+
+.wheel-spin {
+  animation: spin-wheel 3.4s cubic-bezier(0.12, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes pop-win {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pop-win {
+  animation: pop-win 0.55s ease-out;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(540deg);
+    opacity: 0;
+  }
+}
