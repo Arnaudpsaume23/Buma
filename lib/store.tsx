@@ -261,7 +261,7 @@ export function BumaProvider({ children }: { children: React.ReactNode }) {
           eligibles.map((m) => m.id),
           seed,
         );
-        const paid = [...paidToday(state.paiements, groupe.id, groupe.jour_actuel)];
+        const paid = Array.from(paidToday(state.paiements, groupe.id, groupe.jour_actuel));
         const tirage: Tirage = {
           id: `t-${groupe.id}-j${groupe.jour_actuel}`,
           groupe_id: groupe.id,
