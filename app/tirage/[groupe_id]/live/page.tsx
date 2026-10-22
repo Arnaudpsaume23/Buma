@@ -5,16 +5,16 @@ import { Confetti } from "@/components/Confetti";
 import { Wheel } from "@/components/Wheel";
 import { eligibleForDraw, drawUnlocked, paidToday } from "@/lib/eligibility";
 import { fcfa, isDrawHour, shortPhone } from "@/lib/format";
-import { usegroupe!.!. } from "@/lib/store";
+import { useGroupe } from "@/lib/store";
 
 export default function TirageLivePage({
   params,
 }: {
-  params: { groupe!._id: string };
+  params: { groupe_id: string };
 }) {
-  const store = usegroupe!.(params.groupe!._id);
+  const store = useGroupe(params.groupe_id);
   const {
-    groupe!.,
+    groupe,
     membres,
     paiements,
     tirages,
@@ -28,28 +28,28 @@ export default function TirageLivePage({
   const [error, setError] = useState<string | null>(null);
   const [wa, setWa] = useState<string | null>(null);
 
-  const todayTirage = groupe!.
-    ? tirages.find((t) => t.jour_numero === groupe!..jour_actuel)
+  const todayTirage = groupe
+    ? tirages.find((t) => t.jour_numero === groupe.jour_actuel)
     : undefined;
   const winner = membres.find((m) => m.id === todayTirage?.gagnant_id);
 
   const eligibles = useMemo(() => {
-    if (!groupe!.) return [];
+    if (!groupe) return [];
     return eligibleForDraw({
-      groupe!.,
+      groupe,
       membres,
       paiements,
-      jour: groupe!..jour_actuel,
+      jour: groupe.jour_actuel,
     });
-  }, [groupe!., membres, paiements]);
+  }, [groupe, membres, paiements]);
 
-  if (!groupe!.) return <p>groupe!. introuvable.</p>;
+  if (!groupe) return <p>Groupe introuvable.</p>;
 
-  const paid = paidToday(paiements, groupe!..id, groupe!..jour_actuel).size;
+  const paid = paidToday(paiements, groupe.id, groupe.jour_actuel).size;
   const actifs = membres.filter((m) => m.statut === "actif").length;
-  const heureOk = demo18h || isDrawHour(groupe!..heure_tirage);
+  const heureOk = demo18h || isDrawHour(groupe.heure_tirage);
   const unlock = drawUnlocked(paid, actifs, heureOk);
-  const expressFee = Math.round(groupe!..montant_marmite * (groupe!..frais_express_pct / 100));
+  const expressFee = Math.round(groupe.montant_marmite * (groupe.frais_express_pct / 100));
   const canClick = role === "collecteur";
   const winnerIndex = winner
     ? Math.max(
@@ -82,7 +82,7 @@ export default function TirageLivePage({
         setCount(null);
         setSpinning(true);
         setTimeout(() => {
-          const res = launchTirage(groupe!.!.id!);
+          const res = launchTirage(groupe!.id!);
           setSpinning(false);
           if (!res.ok) setError(res.raison ?? "Échec");
         }, 3400);
@@ -94,7 +94,7 @@ export default function TirageLivePage({
     if (!todayTirage) return;
     setPayout(todayTirage.id, mode);
     const msg = winner
-      ? `🎉 BUMA ${groupe!.!.nom}\nGAGNANTE JOUR ${groupe!..jour_actuel} : ${winner.nom} — ${winner.telephone}\n${fcfa(groupe!..montant_marmite)}\nMode : ${mode === "express" ? "EXPRESS 5 min" : "Demain 10h gratuit"}\nVidéo : ${todayTirage.video_url}\nPreuve seed : ${todayTirage.seed_hasard}`
+      ? `🎉 BUMA ${groupe!.nom}\nGAGNANTE JOUR ${groupe!.jour_actuel} : ${winner.nom} — ${winner.telephone}\n${fcfa(groupe.montant_marmite)}\nMode : ${mode === "express" ? "EXPRESS 5 min" : "Demain 10h gratuit"}\nVidéo : ${todayTirage.video_url}\nPreuve seed : ${todayTirage.seed_hasard}`
       : "";
     setWa(msg);
     const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
@@ -106,14 +106,14 @@ export default function TirageLivePage({
       <Confetti show={Boolean(winner) && !spinning} />
       <section className="rounded-[28px] bg-gabon-blue p-5 text-center text-white">
         <p className="text-xs font-black uppercase tracking-[0.25em] text-gabon-yellow">
-          Tirage live · {groupe!.!..heure_tirage}
+          Tirage live · {groupe.heure_tirage}
         </p>
         <h1 className="font-display text-5xl">Loto Buma</h1>
         <p className="font-bold">
-          Jour {groupe!.!..jour_actuel} · Marmite {fcfa(groupe!..montant_marmite)}
+          Jour {groupe.jour_actuel} · Marmite {fcfa(groupe.montant_marmite)}
         </p>
         <p className="text-sm">
-          Mode {groupe!.!..mode_tirage} · Payés {paid}/{actifs} · Éligibles {eligibles.length}
+          Mode {groupe.mode_tirage} · Payés {paid}/{actifs} · Éligibles {eligibles.length}
         </p>
       </section>
 
@@ -157,10 +157,10 @@ export default function TirageLivePage({
 
       {winner && todayTirage && !spinning && (
         <section className="pop-win rounded-[28px] bg-gabon-yellow p-5 text-center">
-          <p className="text-sm font-black uppercase">Gagnante jour {groupe!.!..jour_actuel}</p>
+          <p className="text-sm font-black uppercase">Gagnante jour {groupe.jour_actuel}</p>
           <p className="font-display text-5xl text-gabon-green">{winner.nom}</p>
           <p className="text-xl font-black">
-            {shortPhone(winner.telephone)} · {fcfa(groupe!.!..montant_marmite)}
+            {shortPhone(winner.telephone)} · {fcfa(groupe.montant_marmite)}
           </p>
           <p className="mt-2 font-mono text-xs">seed {todayTirage.seed_hasard}</p>
           <p className="text-xs">Vidéo simulée : {todayTirage.video_url}</p>
